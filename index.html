@@ -1,0 +1,68 @@
+# LlamaIndex - DataStax Astra Integration
+
+Welcome to the home of the LlamaIndex - DataStax Astra Integration code! This utility integrates LlamaIndex with DataStax Astra, allowing LlamaIndex to fetch data from an Astra database and convert it to the indexable documents necessary for the LlamaIndex framework.
+
+## Overview
+
+The core feature of this application is the `SimpleAstraReader` class. This class connects to the Astra database, pulls in data, and converts each row into an index document compatible with LlamaIndex. The class offers the ability to perform a custom CQL query or a vector search query to fully realize the power of Astra's Vector Search feature.
+
+## Advantages
+
+- Seamless data retrieval from Astra DB which can be harnessed to power your LlamaIndex framework.
+- Able to leverage the high-speed, distributed capabilities of Astra, making data ingestion faster and more efficient.
+- Facilitates vector search queries, allowing you to perform highly specific searches and obtain precise results.
+- Enhances the utilisation of the LlamaIndex by providing the ability to dynamically convert text to vectors, subsequently enabling 'vector search' in the LlamaIndex.
+
+## Usage
+
+Check if you haveall the necessary access information such as Astra client ID, client secret, keyspace and table. The bundle path is the path to the zip file holding the secure connection bundle provided by Astra.
+
+### Sample Code Usage
+
+The code repository which has more detailed usage instructions as well as the full source code can be found in this [Github link](https://github.com).
+
+```python
+from IPython.display import Markdown, display
+from llama_index import ListIndex
+from SimpleAstraReader import SimpleAstraReader
+import os
+
+openai.api_key = "<openai_api_key>"
+bundle_path = "<secure_connect_bundle_path>"
+client_id = "<client_id>"
+client_secret = "<client_secret>"
+table = "<table_name>"
+keyspace = "<keyspace>"
+query = "<query>"
+
+reader = SimpleAstraReader(bundle_path, client_id, client_secret, keyspace, table)
+documents = reader.load_data(query)
+
+index = ListIndex.from_documents(documents)
+
+query_engine = index.as_query_engine()
+responses = query_engine.query("your query here")
+```
+
+### Vector Search Demonstration
+
+```python
+reader = SimpleAstraReader(bundle_path, client_id, client_secret, keyspace, table, vector_column="item_vector", vector_value="0.15, 0.1, 0.1, 0.35, 0.55", vector_count=1)
+documents = reader.vector_search()
+```
+
+### Astra Columnar Data to LlamaIndex Document
+
+Once the AstraReader is initiated, it fetches data from Astra using the configured settings during object creation. By default, it retrieves all rows from the specified table.
+
+`documents = reader.load_data(query)`
+
+In the code above, each row from the specified table is transformed into a text document, and being an instance of the `Document` class, it is added to the list of documents which are returned as a result.
+
+## Conclusion
+
+Integrating the DataStax Astra DB with LlamaIndex enables developers to tap into the speed and scalability of Astra, being equipped with a Query engine for insightful retrieval of knowledge-augmented index documents formed from data fetched from Astra.
+
+The ideal use-case is any application that requires a natural language interface with a vast amount of data, distributed across multiple data stores. The flexibility in modification and extension of modules provided by LlamaIndex adds immense value and diversification for developers with more complex needs.
+
+'Be on the brink of innovation with LlamaIndex - DataStax Astra Integration!'
